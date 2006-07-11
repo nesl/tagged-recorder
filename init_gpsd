@@ -1,0 +1,44 @@
+#!/bin/sh -e
+#
+# Start up script for GPSD
+#
+# @contact adparker@gmail.com
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+NAME=gpsd
+DAEMON=/usr/bin/$NAME
+DESC="GPS Daemon"
+DAEMON_OPTS="-T s"
+INITFILE=/etc/init.d/$NAME
+
+# abort if no executable exists
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+start)
+        printf "Starting $DESC: $NAME"
+        dsmetool -f "$DAEMON"
+        echo "$NAME"
+        ;;
+
+stop)
+        printf "Stopping: $DESC: $NAME"
+        dsmetool -k "$DAEMON"
+        echo "$NAME"
+        ;;
+
+restart|force-reload)
+        "$0" stop
+        "$0" start
+        ;;
+
+*)
+        printf "Usage: $INITFILE {start|stop|restart|force-reload}\n" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
+
