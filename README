@@ -1,0 +1,28 @@
+async_bt_inq.py: a simple bluetooth scaner that displays the name and MAC
+	addresses of found bluetooth devices. It also writes a log file.
+	Please follow http://www.lecs.cs.ucla.edu/urban-sensing/index.php/Setting_up_and_using_pyBluez_on_the_Nokia_770
+	first.
+	Requires pyBluez.
+
+gps.py: interface to gpsd. gpsd needs to be called with '-T s' to work properly.
+
+kml.py: module for creating kml files. Not all kml tags are supported at this
+	time
+
+recorder.py: GUI for recording audio on the Nokia 770 using an external usb
+	microphone (or external usb soundcard + regular mic).
+	Screenshots are provided.
+	Please follow http://www.lecs.cs.ucla.edu/urban-sensing/index.php/Nokia_770_Audio
+	first.
+	Requires gps.py and pyalsaaudio.so.
+
+recorder.desktop, recorder.service: files for integration with the maemo
+	desktop. Put them in (or symlink)
+	'/var/lib/install/etc/others-menu/extra_applications' and
+	'/var/lib/install/usr/lib/dbus-1.0/services' respectively.
+
+wardrive.py: creates a kml file of access points and gps coordinates for
+	viewing ing Google Earth
+	Requires gps.py and kml.py.
+
+Please email me at august[at]cs[dot]ucla[dot]edu with any questions.

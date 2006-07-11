@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=Tagging Recorder
+Comment=Python
+Exec=/home/user/recorder.py
+Icon=qgn_list_gene_default_app
+Terminal=false
+Type=Application
+X-HildonDesk-ShowInToolbar=true
+StartupWMClass=recorder.py
