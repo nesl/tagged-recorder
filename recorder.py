@@ -198,8 +198,10 @@ class Ui:
     #    self.vbl.add(self.eos)
     # Hiding file button for now. See task #109, Remove "file" button.
     #    self.vbl.add(self.file_button)
-    self.vbl.add(self.upload_button)
-    self.vbl.add(self.upload_server)
+    # Hiding upload button
+    #    self.vbl.add(self.upload_button)
+    # Hiding upload server
+    #    self.vbl.add(self.upload_server)
     self.vbl.add(self.quit)
 
     self.vbr.add(self.statusLabel)
