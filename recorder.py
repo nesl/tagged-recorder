@@ -13,7 +13,7 @@ class Recorder(threading.Thread):
   def __init__(self, input):
     self.inp = input
     self.start_time = time.strftime("%Y-%m-%dT%H-%M-%S")
-    self.file = file_prefix.join([self.start_time, ".wav"])
+    self.file = file_prefix + ''.join([self.start_time, ".wav"])
     self.newfile = None
     self.recording = True
     self.muted = False
@@ -28,7 +28,7 @@ class Recorder(threading.Thread):
     if file[-4:] == ".xml":
       file = file[:-4]
     if file[-4:] != ".wav":
-      file = file_prefix.join([file,'.wav'])
+      file = file_prefix + ''.join([file,'.wav'])
     self.newfile = file
     print file
   
@@ -256,7 +256,7 @@ class Ui:
         self.tag_combo.remove_text(ii)
       self.init_gps()
       self.r = Recorder(self.inp)
-      self.file = file_prefix.join([self.r.start_time, '.xml'])
+      self.file = file_prefix + ''.join([self.r.start_time, '.xml'])
       self.r.start()
       self.app.modify_bg(gtk.STATE_NORMAL, self.color_record)
       image = self.record_button.get_property("image")
@@ -372,7 +372,7 @@ class Ui:
         f = dialog.get_filename()
         self.r.setFile(f)
         if f[-4:] != '.xml':
-          f = file_prefix.join([f, '.xml'])
+          f = ''.join([f, '.xml'])
         self.file = f
         print self.file
       dialog.destroy()
@@ -389,7 +389,7 @@ class Ui:
     response = dialog.run()
     if response == gtk.RESPONSE_OK:
       text = '/var/lib/install/bin/scp'
-      file = file_prefix.join([dialog.get_filename()[:-4], '*'])
+      file = ''.join([dialog.get_filename()[:-4], '*'])
       server = self.upload_server.get_text()
       if server[:-1] != ':':
         server = ''.join([server, ':'])
