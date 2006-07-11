@@ -112,7 +112,7 @@ class Ui:
     self.img_upload = gtk.image_new_from_stock(gtk.STOCK_JUMP_TO, \
                                                gtk.ICON_SIZE_BUTTON*2)
     
-    self.record_button = gtk.ToggleButton("")
+    self.record_button = gtk.ToggleButton("Record")
     self.record_button.set_property("image", self.img_record)
     self.record_button.connect("toggled", self.record_button_callback)
     
@@ -472,10 +472,18 @@ if __name__ == "__main__":
   -h            displays this message and exits
   TAGs          list of tag types to use inplace of the defaults"""
         sys.exit()
-      
     
   elif args:
     tags = args
+
+  if not tags:
+    try:
+      f = open("/media/mmc1/TAGS.txt")
+      s = f.read()
+      tags =  [tag for tag in s.split()]
+    except:
+      pass
+      
   ui = Ui(tags, server, publisher)
   ui.main()
   

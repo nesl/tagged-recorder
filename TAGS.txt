@@ -1,0 +1,11 @@
+calibrated
+repaired
+replaced
+added
+repositioned
+damage-detected
+destroyed
+action-of-note
+diary-notation
+comm-noted
+comment
