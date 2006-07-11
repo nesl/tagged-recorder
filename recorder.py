@@ -120,10 +120,11 @@ class Ui:
     self.eos.set_active(False)
     self.eos.connect("toggled", self.eos_callback)
     
-    self.tag_button = gtk.Button(None, gtk.STOCK_INDENT)
+    #self.tag_button = gtk.Button(None, gtk.STOCK_INDENT)
+    self.tag_button = gtk.Button(None, gtk.STOCK_ADD)
     image,label = \
             self.tag_button.get_children()[0].get_children()[0].get_children()
-    label.set_text("Tag")
+    label.set_text("Create Tag")
     stock,size = image.get_stock()
     image.set_from_stock(stock, size*2)
     self.tag_button.connect("clicked", self.tag_button_callback)
@@ -162,10 +163,11 @@ class Ui:
         y = 0
         x += 1
     
-    self.tag_update = gtk.Button(None, gtk.STOCK_REFRESH)
+    #self.tag_update = gtk.Button(None, gtk.STOCK_REFRESH)
+    self.tag_update = gtk.Button(None, gtk.STOCK_SAVE)
     image,label = \
             self.tag_update.get_children()[0].get_children()[0].get_children()
-    label.set_text("Update")
+    label.set_text("Save Tag")
     stock,size = image.get_stock()
     image.set_from_stock(stock, size*2)
     self.tag_update.connect("clicked", self.tag_update_callback)
@@ -173,10 +175,6 @@ class Ui:
     self.quit = gtk.Button(None, gtk.STOCK_QUIT)
     self.quit.connect("clicked", self.destroy)
     
-    self.color_stop   = gtk.gdk.color_parse("#FFFFFF")
-    self.color_record = gtk.gdk.color_parse("#FF0000")
-    self.color_upload = gtk.gdk.color_parse("#0000FF")
-
     ## Create status label:
     self.statusLabel = gtk.Label("Hello there.")
     self.statusLabel.set_line_wrap(True)
@@ -184,7 +182,17 @@ class Ui:
     ## In other parts of the code, use statusLabel like so:
     ## self.statusLabel.set_text("Press Start to begin\nrecording audio.")
     ## self.refresh()
-    
+
+    ## Create gps label:
+    self.gpsLabel = gtk.Label("Hello there.")
+    self.gpsLabel.set_line_wrap(True)
+    self.gpsLabel.show()
+
+    self.color_stop   = gtk.gdk.color_parse("#FFFFFF")
+    self.color_record = gtk.gdk.color_parse("#FF0000")
+    self.color_upload = gtk.gdk.color_parse("#0000FF")
+
+    self.vbl.add(self.gpsLabel)
     self.vbl.add(self.record_button)
     # Hiding EOS button for now. See task #118.
     #    self.vbl.add(self.eos)
@@ -230,17 +238,22 @@ class Ui:
       self.inp.setrate(8000)
       self.inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
       self.inp.setperiodsize(800)   #collect in factors of 1 second chunks
+      self.statusLabel.set_text("Microphone detected.\nGood.")
     except:
-      self.statusLabel.set_text("COULD NOT FIND MICROPHONE")
+      self.statusLabel.set_text("COULD NOT FIND MICROPHONE.\n Restart and try again.")
 
+  def refresh(self):
+    while gtk.events_pending():
+      gtk.main_iteration()
   
   def init_gps(self):
     self.gpss = {}
     try:
       self.gps = gps_sock.GPS()
+      self.gpsLabel.set_text("GPSD detected."); self.refresh()
     except socket.error, (errno, strerror):
       self.gps = None
-    
+      self.gpsLabel.set_text("GPSD not detected."); self.refresh()
   
   def init_xmlDoc(self):
     self.xmlDoc = xmlDocument()
@@ -354,6 +367,11 @@ class Ui:
         self.tag_combo.append_text(now)
         self.tag_combo.set_active(len(self.tag_combo.get_model())-1)
         [check.set_active(False) for check in self.tag_checks]
+
+        self.statusLabel.set_text('lat:' + str(gval[0]) + \
+                      '\tlon:' + str(gval[1]) + \
+                      '\talt:'+ str(gval[2]))
+        self.refresh()
       
     
   
