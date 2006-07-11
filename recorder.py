@@ -187,7 +187,8 @@ class Ui:
     
     self.vbl.add(self.record_button)
     self.vbl.add(self.eos)
-    self.vbl.add(self.file_button)
+    # Removing file button for now. See task #109, Remove "file" button.
+    #    self.vbl.add(self.file_button)
     self.vbl.add(self.upload_button)
     self.vbl.add(self.upload_server)
     self.vbl.add(self.quit)
