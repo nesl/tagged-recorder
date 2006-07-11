@@ -117,7 +117,7 @@ class Ui:
     self.record_button.connect("toggled", self.record_button_callback)
     
     self.eos = gtk.CheckButton("EOS")
-    self.eos.set_active(True)
+    self.eos.set_active(False)
     self.eos.connect("toggled", self.eos_callback)
     
     self.tag_button = gtk.Button(None, gtk.STOCK_INDENT)
