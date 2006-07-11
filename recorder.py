@@ -192,8 +192,12 @@ class Ui:
     self.color_record = gtk.gdk.color_parse("#FF0000")
     self.color_upload = gtk.gdk.color_parse("#0000FF")
 
+    # Create Left Pane
+
     self.vbl.add(self.gpsLabel)
     self.vbl.add(self.record_button)
+    self.vbl.add(self.tag_button)
+    self.vbl.add(self.tag_update)
     # Hiding EOS button for now. See task #118.
     #    self.vbl.add(self.eos)
     # Hiding file button for now. See task #109, Remove "file" button.
@@ -204,11 +208,12 @@ class Ui:
     #    self.vbl.add(self.upload_server)
     self.vbl.add(self.quit)
 
+
+    # Create Right Pane
+
+    self.vbr.add(self.tag_combo)    
     self.vbr.add(self.statusLabel)
-    self.vbr.add(self.tag_button)
-    self.vbr.add(self.tag_combo)
     self.vbr.add(self.table_check)
-    self.vbr.add(self.tag_update)
     
     self.hbox.add(self.vbl)
     self.hbox.add(gtk.VSeparator())
