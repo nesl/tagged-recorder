@@ -176,6 +176,14 @@ class Ui:
     self.color_stop   = gtk.gdk.color_parse("#FFFFFF")
     self.color_record = gtk.gdk.color_parse("#FF0000")
     self.color_upload = gtk.gdk.color_parse("#0000FF")
+
+    ## Create status label:
+    self.statusLabel = gtk.Label("Hello there.")
+    self.statusLabel.set_line_wrap(True)
+    self.statusLabel.show()
+    ## In other parts of the code, use statusLabel like so:
+    ## self.statusLabel.set_text("Press Start to begin\nrecording audio.")
+    ## self.refresh()
     
     self.vbl.add(self.record_button)
     self.vbl.add(self.eos)
@@ -183,7 +191,8 @@ class Ui:
     self.vbl.add(self.upload_button)
     self.vbl.add(self.upload_server)
     self.vbl.add(self.quit)
-    
+
+    self.vbr.add(self.statusLabel)
     self.vbr.add(self.tag_button)
     self.vbr.add(self.tag_combo)
     self.vbr.add(self.table_check)
@@ -198,7 +207,7 @@ class Ui:
     self.app.set_appview(self.appview)
     
     self.appview.connect("destroy", self.destroy)
-    
+
     gtk.Container.add(self.appview, self.hbox)
     
     
@@ -211,12 +220,17 @@ class Ui:
     self.gps = None
     
     self.r = None
-    self.inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, \
+
+    try:
+      self.inp = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, \
                              alsaaudio.PCM_NORMAL, "hw:1")
-    self.inp.setchannels(1)
-    self.inp.setrate(8000)
-    self.inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    self.inp.setperiodsize(800)   #collect in factors of 1 second chunks
+      self.inp.setchannels(1)
+      self.inp.setrate(8000)
+      self.inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+      self.inp.setperiodsize(800)   #collect in factors of 1 second chunks
+    except:
+      self.statusLabel.set_text("COULD NOT FIND MICROPHONE")
+
   
   def init_gps(self):
     self.gpss = {}
