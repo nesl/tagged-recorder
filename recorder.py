@@ -149,6 +149,8 @@ class Ui:
                          gtk.CheckButton("laughter"), \
                          gtk.CheckButton("coughing"), \
                          gtk.CheckButton("speaker-change")]
+
+
     else:
       self.tag_checks = [gtk.CheckButton(tag) for tag in tags]
     
@@ -517,7 +519,8 @@ if __name__ == "__main__":
       s = f.read()
       tags =  [tag for tag in s.split()]
     except:
-      pass
+      tags = ["calibrated", "repaired", "replaced", "added", "repositioned", "damage-detected", "destroyed", "action-of-note", "diary-notation", "comm-noted", "comment"]
+
       
   ui = Ui(tags, server, publisher)
   ui.main()
