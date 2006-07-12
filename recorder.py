@@ -144,13 +144,7 @@ class Ui:
     self.tag_combo.connect("changed", self.tag_combo_callback)
     
     if not tags:
-      self.tag_checks = [gtk.CheckButton("interruption"), \
-                         gtk.CheckButton("applause"), \
-                         gtk.CheckButton("laughter"), \
-                         gtk.CheckButton("coughing"), \
-                         gtk.CheckButton("speaker-change")]
-
-
+      self.tag_checks = [gtk.CheckButton("Add/Edit /media/mmc1/TAGS.txt")]
     else:
       self.tag_checks = [gtk.CheckButton(tag) for tag in tags]
     
