@@ -8,7 +8,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 NAME=gpsd
 DAEMON=/usr/bin/$NAME
 DESC="GPS Daemon"
-DAEMON_OPTS="-T s"
+DAEMON_OPTS="-p /dev/rfcomm0 -T s"
 INITFILE=/etc/init.d/$NAME
 
 # abort if no executable exists
@@ -19,19 +19,21 @@ set -e
 case "$1" in
 start)
         printf "Starting $DESC: $NAME"
-        dsmetool -f "$DAEMON"
-        echo "$NAME"
+        dsmetool -f "$DAEMON $DAEMON_OPTS"
+	printf ".\n"
         ;;
 
 stop)
         printf "Stopping: $DESC: $NAME"
-        dsmetool -k "$DAEMON"
-        echo "$NAME"
+        dsmetool -k "$DAEMON $DAEMON_OPTS"
+	printf ".\n"
         ;;
 
 restart|force-reload)
         "$0" stop
+	sleep 1
         "$0" start
+	
         ;;
 
 *)

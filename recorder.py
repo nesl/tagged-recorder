@@ -123,7 +123,7 @@ class Ui:
     self.tag_button = gtk.Button(None, gtk.STOCK_ADD)
     image,label = \
             self.tag_button.get_children()[0].get_children()[0].get_children()
-    label.set_text("Create Tag")
+    label.set_text("New Tag")
     stock,size = image.get_stock()
     image.set_from_stock(stock, size*2)
     self.tag_button.connect("clicked", self.tag_button_callback)
@@ -243,7 +243,7 @@ class Ui:
       self.statusLabel.set_text("Microphone detected.\nGood.")
     except:
       self.statusLabel.set_text("COULD NOT FIND MICROPHONE.\n Restart and try again.")
-
+    self.init_gps()
     self.make_data_dir()
 
   def make_data_dir(self):
@@ -294,13 +294,14 @@ class Ui:
       [check.set_active(False) for check in self.tag_checks]
       for ii in range(len(self.tag_combo.get_model())):
         self.tag_combo.remove_text(ii)
-      self.init_gps()
       self.r = Recorder(self.inp)
       self.file = file_prefix + ''.join([self.r.start_time, '.xml'])
       self.r.start()
       self.app.modify_bg(gtk.STATE_NORMAL, self.color_record)
       image = self.record_button.get_property("image")
       image.set_from_stock(gtk.STOCK_MEDIA_STOP, gtk.ICON_SIZE_BUTTON*2)
+      self.gpsLabel.set_text("Recording started")
+      self.refresh()
     else:
       self.app.modify_bg(gtk.STATE_NORMAL, self.color_stop)
       image = self.record_button.get_property("image")
@@ -310,6 +311,8 @@ class Ui:
         time.sleep(.25)
         self.write_xml()
       self.init_xmlDoc()
+      self.gpsLabel.set_text("Recording stopped")
+      self.refresh()
     
   
   def write_xml(self):
@@ -362,6 +365,8 @@ class Ui:
     fd.close()
   
   def tag_button_callback(self, widget, data=None):
+    # this label may be over written before being shown.
+    self.gpsLabel.set_text("Hit Record First") 
     if self.r:
       if self.r.recording:
         now = time.strftime("%Y-%m-%dT%H-%M-%S")
@@ -379,11 +384,13 @@ class Ui:
         self.tag_combo.append_text(now)
         self.tag_combo.set_active(len(self.tag_combo.get_model())-1)
         [check.set_active(False) for check in self.tag_checks]
-        self.update_gps_status()
+        self.gpsLabel.set_text("New tag opened")
+    self.update_gps_status()
+    self.refresh()
         
   def update_gps_status(self):
-    gval = [361.0, 361.0, -1.0]
-    gerror = ""
+    gval = ["361.0", "361.0", "-1.0"]
+ #   gerror = ""
     gmode = ""
     gstatus = ""
     gsatellites = ""
@@ -394,7 +401,7 @@ class Ui:
         gmode = self.gps.mode(text = True)
         gstatus = self.gps.status(text = True)
         gsatellites = str(self.gps.satellites())
-        gerror = str(self.gps.error()[0]) + "m"
+#        gerror = str(self.gps.error()[0]) + "m"
         gval = [str(self.gps.position()[0]), \
                 str(self.gps.position()[1]), \
                 str(self.gps.altitude())]
@@ -404,12 +411,12 @@ class Ui:
     self.statusLabel.set_text("GPS Status:" + gstatus + \
                               ",   Mode:" + gmode + \
                               ",   # Sats:" + gsatellites + \
-                              '\nLat:' + str(gval[0]) + \
-                              '  Lon:' + str(gval[1]) + \
-                              '  Alt:'+ str(gval[2]) + 'm' + \
-                              '\nAccuracy: ' + gerror)
+                              '\nLat:' + gval[0] + \
+                              '  Lon:' + gval[1] + \
+                              '  Alt:'+ gval[2] + 'm')
+  #                            '\nAccuracy: ' + gerror)
 
-
+    
     self.refresh()
     
   
@@ -426,6 +433,8 @@ class Ui:
     #add checked checkboxes to selected tag
     vals = [check.get_active() for check in self.tag_checks]
     self.tags[self.tag_combo.get_active_text()] = vals
+    self.gpsLabel.set_text("Tag saved")
+    self.refresh()
   
   def tag_combo_callback(self, widget, data=None):
     vals = self.tags[widget.get_active_text()]

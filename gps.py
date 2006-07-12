@@ -78,13 +78,13 @@ class GPS:
 			return 0
 		return int(time.mktime(tm) + 0.5)
   
-	def error(self):
-		"""Return error at 95% confidence level in meters as
-		3-tuple (total, horizontal, and vertical)"""
-		result = self.data['E']
-		return (float(result[0]),  # total
-			float(result[1]),  # horizontal
-			float(result[2]))  # vertical
+# 	def error(self):
+# 		"""Return error at 95% confidence level in meters as
+# 		3-tuple (total, horizontal, and vertical)"""
+# 		result = self.data['E']
+# 		return (float(result[0]),  # total
+# 			float(result[1]),  # horizontal
+# 			float(result[2]))  # vertical
 	
 	def satellites(self):
 		"""Return the number of satellites."""
