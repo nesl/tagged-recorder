@@ -1,0 +1,27 @@
+Make sure there aren't any other instances of recorder.py still running.
+
+Make sure your batteries are charged.
+
+Make sure USB thingy is plugged in.
+
+Make sure microphone is turned on.
+
+Make sure the GPS unit is blinking properly.
+
+Make sure Nokia has bluetooth connection to *that* GPS unit.
+
+Make sure the RS-MMC card is properly formated and mounted as "/media/mmc1".
+
+Make sure you have enough space on the RS-MMC card.
+
+Make sure GPSD is running properly: 
+  On another machine run: 
+     telnet IP_OF_NOKIA 2947 
+     PDAVSMEQ
+
+Make sure you set the time correctly on the Nokia.
+
+NOTE that the bluetooth connection tends to die after about 15-20 minutes.
+
+
+
