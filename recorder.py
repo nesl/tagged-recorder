@@ -6,7 +6,7 @@ import threading, gobject
 import gps as gps_sock, socket
 import wave
 
-file_prefix = "/media/mmc1/"
+file_prefix = "/media/mmc1/recorder_data/"
 gobject.threads_init()
 
 class Recorder(threading.Thread):
@@ -71,7 +71,6 @@ class Recorder(threading.Thread):
       shutil.move(self.file, self.newfile)
       self.file = self.newfile
     
-  
 
 class Uploader(threading.Thread):
   def __init__(self, ui, cmd):
@@ -249,6 +248,14 @@ class Ui:
     except:
       self.statusLabel.set_text("COULD NOT FIND MICROPHONE.\n Restart and try again.")
 
+    self.make_data_dir()
+
+  def make_data_dir(self):
+    import os
+    stdin, stdout = os.popen4("mkdir " + file_prefix)
+    return
+
+
   def refresh(self):
     while gtk.events_pending():
       gtk.main_iteration()
@@ -261,6 +268,7 @@ class Ui:
     except socket.error, (errno, strerror):
       self.gps = None
       self.gpsLabel.set_text("GPSD not detected."); self.refresh()
+    
   
   def init_xmlDoc(self):
     self.xmlDoc = xmlDocument()
@@ -362,24 +370,51 @@ class Ui:
       if self.r.recording:
         now = time.strftime("%Y-%m-%dT%H-%M-%S")
         val = [False for x in range(len(self.tag_checks))]
+        gval = ["361.0", "361.0", "-1.0"]
+
         if self.gps:
           self.gps.update()
           gval = [str(self.gps.position()[0]), \
                   str(self.gps.position()[1]), \
                   str(self.gps.altitude())]
-        else:
-          gval = ["361.0", "361.0", "-1.0"]
+          
         self.tags[now] = val
         self.gpss[now] = gval
         self.tag_combo.append_text(now)
         self.tag_combo.set_active(len(self.tag_combo.get_model())-1)
         [check.set_active(False) for check in self.tag_checks]
+        self.update_gps_status()
+        
+  def update_gps_status(self):
+    gval = [361.0, 361.0, -1.0]
+    gerror = ""
+    gmode = ""
+    gstatus = ""
+    gsatellites = ""
+    if self.gps:
+      self.gps.update()
 
-        self.statusLabel.set_text('lat:' + str(gval[0]) + \
-                      '\tlon:' + str(gval[1]) + \
-                      '\talt:'+ str(gval[2]))
-        self.refresh()
-      
+      try:
+        gmode = self.gps.mode(text = True)
+        gstatus = self.gps.status(text = True)
+        gsatellites = str(self.gps.satellites())
+        gerror = str(self.gps.error()[0]) + "m"
+        gval = [str(self.gps.position()[0]), \
+                str(self.gps.position()[1]), \
+                str(self.gps.altitude())]
+      except KeyError:
+        pass
+
+    self.statusLabel.set_text("GPS Status:" + gstatus + \
+                              ",   Mode:" + gmode + \
+                              ",   # Sats:" + gsatellites + \
+                              '\nLat:' + str(gval[0]) + \
+                              '  Lon:' + str(gval[1]) + \
+                              '  Alt:'+ str(gval[2]) + 'm' + \
+                              '\nAccuracy: ' + gerror)
+
+
+    self.refresh()
     
   
   def eos_callback(self, widget, data=None):

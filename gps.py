@@ -18,11 +18,11 @@ class GPS:
   
 	def update(self):
 		"""Fetch the latest status from gpsd"""
-		self.sock.send("PDAVSM")
+		self.sock.send("PDAVSMEQ")
 		result = self.sock.recv(2048)
 		result = result[:-1].rstrip()
 		if self.debug == 1:
-			print >> sys.stderr, ">GPSD: PDAVSM" 
+			print >> sys.stderr, ">GPSD: PDAVSMEQ" 
 			print >> sys.stderr, "GPSD>: %s" % result
 		chunks = string.split(result, ',')
 		if chunks[0] != "GPSD":
@@ -78,3 +78,14 @@ class GPS:
 			return 0
 		return int(time.mktime(tm) + 0.5)
   
+	def error(self):
+		"""Return error at 95% confidence level in meters as
+		3-tuple (total, horizontal, and vertical)"""
+		result = self.data['E']
+		return (float(result[0]),  # total
+			float(result[1]),  # horizontal
+			float(result[2]))  # vertical
+	
+	def satellites(self):
+		"""Return the number of satellites."""
+		return int(self.data['Q'][0])
