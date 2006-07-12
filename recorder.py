@@ -21,7 +21,7 @@ class Recorder(threading.Thread):
       self.mic = alsaaudio.Mixer('Mic', 0, 'hw:1')
     except alsaaudio.ALSAAudioError:
       gtk.main_quit()
-    self.eos = True
+    self.eos = False
     threading.Thread.__init__(self)
   
   def setFile(self, file):
@@ -53,15 +53,15 @@ class Recorder(threading.Thread):
       
       if l:
         fd.writeframes(data)
-        store += 1
-      if store == 9 and self.eos:
-        self.muted = True
-        self.mic.setvolume(0,0,'capture')
-      elif store == 19:
-        if self.eos:
-          self.muted = False
-          self.mic.setvolume(100,0,'capture')
-        store = 0
+#        store += 1
+#      if store == 9 and self.eos:
+#        self.muted = True
+#        self.mic.setvolume(0,0,'capture')
+#      elif store == 19:
+#        if self.eos:
+#          self.muted = False
+#          self.mic.setvolume(100,0,'capture')
+#        store = 0
       del data
     
     self.stop_time = time.strftime("%Y-%m-%dT%H-%M-%S")
